@@ -1,0 +1,115 @@
+{
+  "info": {
+    "_postman_id": "a2c5bf18-b452-4d8f-9460-3f3e5e363a42",
+    "name": "ICEPOT - Phase 3 Integration Adapters",
+    "description": "Local sandbox-only integration checks. These requests never call Duffel, Amadeus, or Stripe and cannot make bookings or charges.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000"
+    }
+  ],
+  "item": [
+    {
+      "name": "Sandbox flight search",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"origin\": \"SFO\",\n  \"destination\": \"NRT\",\n  \"departureDate\": \"2026-11-10\",\n  \"returnDate\": \"2026-11-15\",\n  \"adults\": 1\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/sandbox/flights/search",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "v1", "sandbox", "flights", "search"]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('returns sandbox flight offers', function () {",
+              "    pm.response.to.have.status(200);",
+              "    const body = pm.response.json();",
+              "    pm.expect(body.mode).to.eql('sandbox');",
+              "    pm.expect(body.provider).to.eql('Duffel');",
+              "    pm.expect(body.offers).to.be.an('array').that.is.not.empty;",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Sandbox hotel search",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"cityCode\": \"TYO\",\n  \"checkInDate\": \"2026-11-10\",\n  \"checkOutDate\": \"2026-11-12\",\n  \"adults\": 1\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/sandbox/hotels/search",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "v1", "sandbox", "hotels", "search"]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('returns sandbox hotel offers', function () {",
+              "    pm.response.to.have.status(200);",
+              "    const body = pm.response.json();",
+              "    pm.expect(body.mode).to.eql('sandbox');",
+              "    pm.expect(body.provider).to.eql('Amadeus');",
+              "    pm.expect(body.offers).to.be.an('array').that.is.not.empty;",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Sandbox payment intent",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"amount\": 1200,\n  \"currency\": \"USD\",\n  \"tripId\": \"trip-123\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/sandbox/payments/intents",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "v1", "sandbox", "payments", "intents"]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('creates a sandbox-only payment intent', function () {",
+              "    pm.response.to.have.status(201);",
+              "    const body = pm.response.json();",
+              "    pm.expect(body.mode).to.eql('sandbox');",
+              "    pm.expect(body.provider).to.eql('Stripe');",
+              "    pm.expect(body.paymentIntent.status).to.eql('requires_payment_method');",
+              "});"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,132 @@
+{
+  "info": {
+    "_postman_id": "e7797c7c-79ab-43a9-a0f2-c57923e465c4",
+    "name": "ICEPOT - Phase 6 Disruption and PDF",
+    "description": "Sandbox disruption simulation and authenticated local PDF export. The simulated monitor only emits alerts; it never rebooks flights.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:3000" },
+    { "key": "tripId", "value": "" },
+    { "key": "bookingId", "value": "" },
+    { "key": "streamToken", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "Create sandbox confirmed flight",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/sandbox/disruptions/bookings",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "v1", "sandbox", "disruptions", "bookings"]
+        },
+        "description": "Development only. Creates a confirmed mock flight in MongoDB. Copy tripId and bookingId from the response into collection variables."
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('creates a sandbox flight fixture', function () {",
+              "    pm.response.to.have.status(201);",
+              "    const body = pm.response.json();",
+              "    pm.expect(body.mode).to.eql('sandbox');",
+              "    pm.expect(body.bookingId).to.be.a('string');",
+              "    pm.expect(body.tripId).to.be.a('string');",
+              "    pm.collectionVariables.set('bookingId', body.bookingId);",
+              "    pm.collectionVariables.set('tripId', body.tripId);",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Open trip SSE stream (run before simulation)",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{streamToken}}" },
+          { "key": "Accept", "value": "text/event-stream" }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/trips/{{tripId}}/stream",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "v1", "trips", "{{tripId}}", "stream"]
+        },
+        "description": "Set streamToken to the gateway STREAM_AUTH_TOKEN. Keep this request open to receive the alert."
+      }
+    },
+    {
+      "name": "Simulate delayed flight",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"status\": \"DELAYED\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/sandbox/disruptions/{{bookingId}}/simulate",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "v1", "sandbox", "disruptions", "{{bookingId}}", "simulate"]
+        },
+        "description": "Development only. Emits a simulated disruption_alert to the open stream; it does not rebook."
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('publishes a simulated delay alert', function () {",
+              "    pm.response.to.have.status(202);",
+              "    const body = pm.response.json();",
+              "    pm.expect(body.mode).to.eql('sandbox');",
+              "    pm.expect(body.status).to.eql('DELAYED');",
+              "    pm.expect(body.alertPublished).to.eql(true);",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Export itinerary as PDF",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{streamToken}}" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"Tokyo at an easy pace\",\n  \"summary\": \"A thoughtful five-day city itinerary.\",\n  \"currency\": \"USD\",\n  \"estimatedTotalCost\": 1200,\n  \"days\": [\n    {\n      \"date\": \"2026-11-10\",\n      \"title\": \"Arrival and first wander\",\n      \"activities\": [\"Check in\", \"Explore the neighborhood\"]\n    },\n    {\n      \"date\": \"2026-11-11\",\n      \"title\": \"Markets and museums\",\n      \"activities\": [\"Visit a local market\"]\n    }\n  ]\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/trips/{{tripId}}/export/pdf",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "v1", "trips", "{{tripId}}", "export", "pdf"]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('downloads a PDF itinerary', function () {",
+              "    pm.response.to.have.status(200);",
+              "    pm.expect(pm.response.headers.get('Content-Type')).to.include('application/pdf');",
+              "    pm.expect(pm.response.headers.get('Content-Disposition')).to.include('.pdf');",
+              "});"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

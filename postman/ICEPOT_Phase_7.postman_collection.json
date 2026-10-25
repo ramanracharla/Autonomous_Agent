@@ -1,0 +1,120 @@
+{
+  "info": {
+    "_postman_id": "0f13b1e7-ec62-4af8-bced-fd3e10db42c0",
+    "name": "ICEPOT - Phase 7 Production Readiness",
+    "description": "Health and readiness checks for deployed services. Readiness requires live MongoDB and Redis connections.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "gatewayBaseUrl", "value": "http://localhost:3000" },
+    { "key": "agentBaseUrl", "value": "http://localhost:8000" },
+    { "key": "webBaseUrl", "value": "http://localhost:5173" }
+  ],
+  "item": [
+    {
+      "name": "Gateway liveness",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{gatewayBaseUrl}}/api/v1/health",
+          "host": ["{{gatewayBaseUrl}}"],
+          "path": ["api", "v1", "health"]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('gateway process is alive', function () {",
+              "    pm.response.to.have.status(200);",
+              "    pm.expect(pm.response.json().status).to.eql('UP');",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Gateway readiness",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{gatewayBaseUrl}}/api/v1/ready",
+          "host": ["{{gatewayBaseUrl}}"],
+          "path": ["api", "v1", "ready"]
+        },
+        "description": "Returns 200 only when MongoDB and Redis are connected; returns 503 otherwise."
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('gateway dependencies are ready', function () {",
+              "    pm.response.to.have.status(200);",
+              "    pm.expect(pm.response.json().status).to.eql('READY');",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Agent health",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{agentBaseUrl}}/health",
+          "host": ["{{agentBaseUrl}}"],
+          "path": ["health"]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('agent service is healthy', function () {",
+              "    pm.response.to.have.status(200);",
+              "    pm.expect(pm.response.json().status).to.eql('UP');",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Frontend availability",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{webBaseUrl}}/",
+          "host": ["{{webBaseUrl}}"],
+          "path": [""]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('frontend is available', function () {",
+              "    pm.response.to.have.status(200);",
+              "    pm.expect(pm.response.text()).to.include('ICEPOT');",
+              "});"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,95 @@
+- main [ref=e3]:
+  - generic [ref=e4]:
+    - link "ICEPOT home" [ref=e5] [cursor=pointer]:
+      - /url: /
+      - generic [aria-hidden] [ref=e6]: i
+      - generic [ref=e7]: icepot.
+    - navigation "Main navigation" [ref=e8]:
+      - link "Trip planner" [ref=e9] [cursor=pointer]:
+        - /url: "#planner"
+      - link "Live updates" [ref=e10] [cursor=pointer]:
+        - /url: "#live-updates"
+    - generic "Personal workspace" [ref=e11]:
+      - generic [ref=e12]: A
+      - generic [ref=e13]: My workspace
+      - generic [aria-hidden] [ref=e14]: ⌄
+  - generic [ref=e15]:
+    - generic [ref=e16]:
+      - generic [ref=e17]: YOUR NEXT CHAPTER
+      - heading [level=1] [ref=e19]:
+        - text: Somewhere wonderfulstarts
+        - emphasis [ref=e20]: right here.
+      - paragraph [ref=e21]: Thoughtful plans for the way you really want to travel.
+    - generic [aria-hidden] [ref=e22]:
+      - generic [ref=e27]: ✳
+      - generic [ref=e28]: ✳
+    - generic [ref=e29]: 01 / YOUR JOURNEY
+  - generic [ref=e30]:
+    - generic [ref=e31]:
+      - generic [ref=e32]:
+        - generic [ref=e33]:
+          - generic [ref=e34]: A LITTLE INSPIRATION GOES A LONG WAY
+          - heading "Where to next?" [level=2] [ref=e35]
+        - generic [aria-hidden] [ref=e36]: ↗
+      - generic [ref=e37]:
+        - generic [ref=e38]: What would make this trip yours?
+        - textbox "What would make this trip yours?" [ref=e39]: A mix of neighborhood food spots, design, and quiet moments
+        - generic [ref=e40]:
+          - generic [ref=e41]:
+            - generic [ref=e42]: Flying from
+            - textbox "Flying from" [ref=e43]: SFO
+          - generic [ref=e44]:
+            - generic [ref=e45]: Going to
+            - textbox "Going to" [ref=e46]: Tokyo
+        - generic [ref=e47]:
+          - generic [ref=e48]:
+            - generic [ref=e49]: From
+            - textbox "From" [ref=e50]: 2026-11-10
+          - generic [ref=e51]:
+            - generic [ref=e52]: Until
+            - textbox "Until" [ref=e53]: 2026-11-15
+          - generic [ref=e54]:
+            - generic [ref=e55]: Travelers
+            - combobox "Travelers" [ref=e56]:
+              - option "1 traveler" [selected]
+              - option "2 travelers"
+              - option "3 travelers"
+              - option "4 travelers"
+              - option "5 travelers"
+              - option "6 travelers"
+        - button "Create my itinerary" [ref=e57] [cursor=pointer]:
+          - text: Create my itinerary
+          - generic [aria-hidden] [ref=e58]: ↗
+        - paragraph [ref=e59]: Your plan is a starting point, made just for you.
+    - generic [ref=e61]:
+      - generic [ref=e66]: YOUR CANVAS AWAITS
+      - heading [level=2] [ref=e67]:
+        - text: A trip that feelslike
+        - emphasis [ref=e68]: you.
+      - paragraph [ref=e69]: Share a few details and we’ll shape them into a day-by-day plan.
+      - generic [ref=e70]:
+        - generic [ref=e71]: Made around your pace
+        - generic [ref=e73]: Room for happy detours
+  - generic [ref=e75]:
+    - generic [ref=e76]:
+      - generic [ref=e78]: ◉
+      - generic [ref=e79]:
+        - generic [ref=e80]: THE JOURNEY, AS IT UNFOLDS
+        - heading "Live trip updates" [level=2] [ref=e81]
+      - generic [ref=e82]: NOT CONNECTED
+    - generic [ref=e84]:
+      - generic [ref=e85]:
+        - generic [ref=e86]: Trip ID
+        - textbox "Trip ID" [ref=e87]:
+          - /placeholder: Your 24-character trip ID
+      - generic [ref=e88]:
+        - generic [ref=e89]: Stream access token
+        - textbox "Stream access token" [ref=e90]:
+          - /placeholder: Bearer token
+      - button "Connect to updates" [ref=e91] [cursor=pointer]:
+        - text: Connect to updates
+        - generic [aria-hidden] [ref=e92]: →
+    - paragraph [ref=e94]: Thoughts, itinerary drafts, and trip updates will appear here.
+  - generic [ref=e95]:
+    - generic [ref=e96]: Made for the way you want to wander.
+    - generic [ref=e97]: ICEPOT ● THOUGHTFUL TRAVEL, IN MOTION

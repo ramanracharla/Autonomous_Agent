@@ -1,0 +1,82 @@
+{
+  "info": {
+    "_postman_id": "6885f138-19de-49b4-87d3-2fce63be1802",
+    "name": "ICEPOT - Phase 2 Agent Framework",
+    "description": "Smoke tests for the FastAPI agent service. Set OPENAI_API_KEY in the environment before requesting an itinerary.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "agentBaseUrl",
+      "value": "http://localhost:8000"
+    }
+  ],
+  "item": [
+    {
+      "name": "Agent health",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{agentBaseUrl}}/health",
+          "host": ["{{agentBaseUrl}}"],
+          "path": ["health"]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('returns HTTP 200', function () { pm.response.to.have.status(200); });",
+              "pm.test('reports agent service UP', function () {",
+              "    const body = pm.response.json();",
+              "    pm.expect(body.success).to.eql(true);",
+              "    pm.expect(body.service).to.eql('icepot-agent-service');",
+              "    pm.expect(body.status).to.eql('UP');",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Generate itinerary",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"prompt\": \"Plan a 3-day food and culture trip to Tokyo under $1200\",\n  \"origin\": \"SFO\",\n  \"destination\": \"Tokyo\",\n  \"startDate\": \"2026-11-10\",\n  \"endDate\": \"2026-11-12\",\n  \"travelers\": 1\n}"
+        },
+        "url": {
+          "raw": "{{agentBaseUrl}}/api/v1/agent/plan",
+          "host": ["{{agentBaseUrl}}"],
+          "path": ["api", "v1", "agent", "plan"]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('returns a generated itinerary', function () {",
+              "    pm.response.to.have.status(200);",
+              "    const body = pm.response.json();",
+              "    pm.expect(body.title).to.be.a('string');",
+              "    pm.expect(body.days).to.be.an('array').that.is.not.empty;",
+              "});"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

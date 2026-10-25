@@ -1,0 +1,10 @@
+node_modules
+.venv
+dist
+frontend/dist
+coverage
+.git
+.github
+storage
+*.env
+!.env.example

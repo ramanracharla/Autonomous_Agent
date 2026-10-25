@@ -1,0 +1,22 @@
+[     197ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://127.0.0.1:5173/@fs/D:/Ananth/Autonomous_Travel_Agent/node_modules/.vite/deps/react-dom_client.js?v=e434a686:15801
+[     510ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) %o @ http://127.0.0.1:5173/:0
+[    8488ms] [LOG] [vite] server connection lost. Polling for restart... @ http://127.0.0.1:5173/@vite/client:1089
+[  126147ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:5173/agent-api/api/v1/agent/plan:0
+[  148687ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:5173/agent-api/api/v1/agent/plan:0
+[  180850ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:5173/?token=KjbPwEAXqxrG' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:5173/@vite/client:958
+[  180864ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:5173/?token=KjbPwEAXqxrG' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:5173/@vite/client:968
+[  180865ms] [ERROR] [vite] failed to connect to websocket.
+your current setup:
+  (browser) 127.0.0.1:5173/ <--[HTTP]--> 127.0.0.1:5173/ (server)
+  (browser) 127.0.0.1:5173/ <--[WebSocket (failing)]--> 127.0.0.1:5173/ (server)
+Check out your Vite / network configuration and https://vite.dev/config/server-options.html#server-hmr . @ http://127.0.0.1:5173/@vite/client:367
+[  180866ms] [ERROR] Failed to send error to Vite server: TypeError: Cannot read properties of undefined (reading 'send')
+    at Object.send (http://127.0.0.1:5173/@vite/client:262:7)
+    at Object.send (http://127.0.0.1:5173/@vite/client:994:16)
+    at Object.send (http://127.0.0.1:5173/@vite/client:121:21)
+    at Object.send (http://127.0.0.1:5173/@vite/client:201:30)
+    at sendError (http://127.0.0.1:5173/@vite/client:329:19)
+    at sendLog (http://127.0.0.1:5173/@vite/client:357:11) @ http://127.0.0.1:5173/@vite/client:358
+[  180983ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://127.0.0.1:5173/@fs/D:/Ananth/Autonomous_Travel_Agent/node_modules/.vite/deps/react-dom_client.js?v=e434a686:15801
+[  181321ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) %o @ http://127.0.0.1:5173/#planner:0
+[  181334ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:5173/favicon.svg:0

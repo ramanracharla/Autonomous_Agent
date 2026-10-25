@@ -1,0 +1,76 @@
+{
+  "info": {
+    "_postman_id": "c6a7b22a-20eb-40c1-ad4b-ddc8749e38fa",
+    "name": "ICEPOT - Phase 5 Frontend API",
+    "description": "API checks for the dashboard's itinerary and live-update integrations. The dashboard itself runs at http://localhost:5173.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "agentBaseUrl",
+      "value": "http://localhost:8000"
+    },
+    {
+      "key": "gatewayBaseUrl",
+      "value": "http://localhost:3000"
+    },
+    {
+      "key": "tripId",
+      "value": "65f1a2b3c4d5e6f7a8b9c0b2"
+    },
+    {
+      "key": "streamToken",
+      "value": ""
+    }
+  ],
+  "item": [
+    {
+      "name": "Generate itinerary (dashboard API)",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"prompt\": \"A mix of neighborhood food spots, design, and quiet moments\",\n  \"origin\": \"SFO\",\n  \"destination\": \"Tokyo\",\n  \"startDate\": \"2026-11-10\",\n  \"endDate\": \"2026-11-15\",\n  \"travelers\": 1\n}"
+        },
+        "url": {
+          "raw": "{{agentBaseUrl}}/api/v1/agent/plan",
+          "host": ["{{agentBaseUrl}}"],
+          "path": ["api", "v1", "agent", "plan"]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('returns an itinerary for the dashboard', function () {",
+              "    pm.response.to.have.status(200);",
+              "    const body = pm.response.json();",
+              "    pm.expect(body.title).to.be.a('string');",
+              "    pm.expect(body.days).to.be.an('array').that.is.not.empty;",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Connect to live trip stream (leave open)",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{streamToken}}" },
+          { "key": "Accept", "value": "text/event-stream" }
+        ],
+        "url": {
+          "raw": "{{gatewayBaseUrl}}/api/v1/trips/{{tripId}}/stream",
+          "host": ["{{gatewayBaseUrl}}"],
+          "path": ["api", "v1", "trips", "{{tripId}}", "stream"]
+        },
+        "description": "The dashboard connects to this same authenticated stream. Use a valid trip ID and the configured STREAM_AUTH_TOKEN."
+      }
+    }
+  ]
+}

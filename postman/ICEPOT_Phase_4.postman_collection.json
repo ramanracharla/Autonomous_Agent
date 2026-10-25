@@ -1,0 +1,80 @@
+{
+  "info": {
+    "_postman_id": "7b4a6842-b4ec-477d-a1fd-bfb495940d8b",
+    "name": "ICEPOT - Phase 4 Async Event Streaming",
+    "description": "Use the sandbox publisher and authenticated SSE stream to test Redis Pub/Sub. Open the stream request in one tab before publishing an event in another.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000"
+    },
+    {
+      "key": "tripId",
+      "value": "65f1a2b3c4d5e6f7a8b9c0b2"
+    },
+    {
+      "key": "streamToken",
+      "value": ""
+    }
+  ],
+  "item": [
+    {
+      "name": "Open trip event stream (run first)",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{streamToken}}"
+          },
+          {
+            "key": "Accept",
+            "value": "text/event-stream"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/trips/{{tripId}}/stream",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "v1", "trips", "{{tripId}}", "stream"]
+        },
+        "description": "Keep this streaming request open. The client must send the STREAM_AUTH_TOKEN configured for the gateway."
+      }
+    },
+    {
+      "name": "Publish sandbox agent thought",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"type\": \"agent_thought\",\n  \"timestamp\": \"2026-10-24T10:05:02Z\",\n  \"step\": \"ANALYZING_FLIGHTS\",\n  \"message\": \"Comparing available routes for this trip.\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/sandbox/trips/{{tripId}}/events",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "v1", "sandbox", "trips", "{{tripId}}", "events"]
+        },
+        "description": "Run after opening the event stream. This development-only route publishes a mock event to Redis."
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('publishes the sandbox event', function () {",
+              "    pm.response.to.have.status(202);",
+              "    const body = pm.response.json();",
+              "    pm.expect(body.success).to.eql(true);",
+              "    pm.expect(body.mode).to.eql('sandbox');",
+              "    pm.expect(body.published).to.eql(true);",
+              "});"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
